@@ -11,14 +11,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
 import com.gzeinnumer.myandroidtemplate3kt.databinding.ActivityMainBinding
+import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 
 class MainActivity : BaseActivity() {
+
+    private val TAG = "MainActivity"
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val func = "onCreate+"
+        myLogD(TAG,func)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -28,10 +34,16 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initToolBar() {
+        val func = "initToolBar+"
+        myLogD(TAG,func)
+
         setSupportActionBar(binding.appBarMain.toolbar)
     }
 
     private fun initFab() {
+        val func = "initFab+"
+        myLogD(TAG,func)
+
         binding.appBarMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -39,6 +51,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initNavigation() {
+        val func = "initNavigation+"
+        myLogD(TAG,func)
+
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.nav_profile,

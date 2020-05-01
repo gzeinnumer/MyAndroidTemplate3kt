@@ -8,9 +8,12 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.gzeinnumer.myandroidtemplate3kt.R
+import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import dagger.android.support.DaggerFragment
 
 class ProfileFragment : DaggerFragment() {
+
+    private val TAG = "ProfileFragment"
 
     private lateinit var profileVM: ProfileVM
 
@@ -19,6 +22,9 @@ class ProfileFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val func = "onCreateView+"
+        myLogD(TAG,func)
+
         profileVM =
             ViewModelProviders.of(this).get(ProfileVM::class.java)
         val root = inflater.inflate(R.layout.fragment_profile, container, false)

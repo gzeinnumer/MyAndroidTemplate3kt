@@ -2,8 +2,12 @@ package com.gzeinnumer.myandroidtemplate3kt.data
 
 import android.content.Context
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponseLogin
+import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
+import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 
 class SessionManager(private val context: Context) {
+
+    private val TAG = "SessionManager"
 
     companion object {
         private const val PREF_NAME = "session"
@@ -20,6 +24,9 @@ class SessionManager(private val context: Context) {
     private val editor = prefs.edit()
 
     fun setAuth(data: ResponseLogin) {
+        val func = "setAuth+"
+        myLogD(AppDatabase.TAG,func)
+
         editor.apply{
             putString(KEY_ID, data.id.toString())
             putString(KEY_ID, data.id.toString())

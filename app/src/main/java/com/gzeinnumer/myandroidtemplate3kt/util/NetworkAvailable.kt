@@ -10,11 +10,17 @@ class NetworkAvailable(private val context: Context) {
     private val TAG = "NetworkAvailable"
 
     fun isNetworkAvailable(): Boolean {
+        val func = "isNetworkAvailable+"
+        myLogD(TAG,func)
+
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo.isConnected
     }
 
     fun isInternetAvailable(): Boolean {
+        val func = "isInternetAvailable+"
+        myLogD(TAG,func)
+
         try {
             val address = InetAddress.getByName("www.google.com")
             return !address.equals("")

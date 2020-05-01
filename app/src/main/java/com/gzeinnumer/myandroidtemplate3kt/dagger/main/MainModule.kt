@@ -13,5 +13,4 @@ object MainModule {
     fun providesMainApi(retrofit: Retrofit): MainApi {
         return retrofit.create(MainApi::class.java)
     }
-
 }

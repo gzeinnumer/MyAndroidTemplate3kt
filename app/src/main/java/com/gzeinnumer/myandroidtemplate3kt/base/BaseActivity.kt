@@ -20,8 +20,8 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
 
     override fun onStart() {
         super.onStart()
-
-        myLogD(TAG, "onStart: ")
+        val func = "onStart+"
+        myLogD(TAG,func)
 
         builderLoading = SpotsDialog.Builder().setContext(this).setMessage("Mohon Menunggu").setCancelable(false)
 
@@ -31,24 +31,28 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        myLogD(TAG, "onCreate: ")
+        val func = "onCreate+"
+        myLogD(TAG,func)
     }
 
     fun onSuccess(msg: String?) {
         val func = "onSuccess+"
         myLogD(TAG,func)
+
         msg?.let { Toasty.success(this, it, Toast.LENGTH_SHORT).show() }
     }
 
     fun onFailed(msg: String?) {
         val func = "onFailed+"
         myLogD(TAG,func)
+
         msg?.let { Toasty.error(this, it, Toast.LENGTH_LONG).show() }
     }
 
     fun onHideLoading() {
         val func = "onHideLoading+"
         myLogD(TAG,func)
+
         alertLoading.apply {
             dismiss()
         }
@@ -57,6 +61,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
     fun onShowLoading() {
         val func = "onShowLoading+"
         myLogD(TAG,func)
+
         alertLoading.apply {
             show()
         }
@@ -132,6 +137,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
     override fun onDestroy() {
         val func = "onDestroy+"
         myLogD(TAG,func)
+
         super.onDestroy()
         finish()
     }

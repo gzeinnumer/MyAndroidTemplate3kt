@@ -8,9 +8,13 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.gzeinnumer.myandroidtemplate3kt.R
+import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
+import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import dagger.android.support.DaggerFragment
 
 class PostFragment : DaggerFragment() {
+
+    private val TAG = "PostFragment"
 
     private lateinit var postVM: PostVM
 
@@ -19,6 +23,9 @@ class PostFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val func = "onCreateView+"
+        myLogD(TAG,func)
+
         postVM =
             ViewModelProviders.of(this).get(PostVM::class.java)
         val root = inflater.inflate(R.layout.fragment_post, container, false)

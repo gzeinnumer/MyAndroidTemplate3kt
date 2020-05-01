@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponseLogin
 import com.gzeinnumer.myandroidtemplate3kt.data.network.authApi.AuthApi
+import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
@@ -26,7 +27,9 @@ class AuthVM @Inject constructor(private val authApi: AuthApi) : ViewModel() {
     }
 
     fun authWithId(userId: Int) {
-        myLogD(TAG, "authWithId: attempting to login")
+        val func = "authWithId+"
+        myLogD(AppDatabase.TAG,func)
+
         authUser.value = BaseResource.loading()
         val source: LiveData<BaseResource<ResponseLogin>> = LiveDataReactiveStreams.fromPublisher(
             authApi.getUserRx1(userId)

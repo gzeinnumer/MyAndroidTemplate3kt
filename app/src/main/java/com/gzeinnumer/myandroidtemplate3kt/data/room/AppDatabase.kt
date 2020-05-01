@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import android.content.Context
 import com.gzeinnumer.myandroidtemplate3kt.data.room.dao.DummyDao
 import com.gzeinnumer.myandroidtemplate3kt.data.room.table.DummyTable
+import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 
 @Database(
     entities = [
@@ -15,12 +16,18 @@ import com.gzeinnumer.myandroidtemplate3kt.data.room.table.DummyTable
 )
 abstract class AppDatabase : RoomDatabase() {
 
+
     abstract fun storeDummyDao(): DummyDao
 
     companion object {
 
+        val TAG = "ApDatabase"
+
         @Synchronized
         fun getInstance(context: Context): AppDatabase {
+            val func = "getInstance+"
+            myLogD(TAG,func)
+
             return Room
                 .databaseBuilder(context.applicationContext, AppDatabase::class.java, "gzeinnumer")
                 .allowMainThreadQueries()

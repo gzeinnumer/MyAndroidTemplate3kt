@@ -8,7 +8,12 @@ import com.gzeinnumer.myandroidtemplate3kt.R
 
 class SimpleMaterialDialog(val context: Context) {
 
+    private val TAG = ""
+
     fun dialogInfo(): MaterialDialog.Builder {
+        val func = "dialogInfo+"
+        myLogD(TAG,func)
+
         return MaterialDialog.Builder(context)
             .title("Sukses")
             .positiveText("Ok")
@@ -20,6 +25,9 @@ class SimpleMaterialDialog(val context: Context) {
     }
 
     fun dialogSuccess(): MaterialDialog.Builder {
+        val func = "dialogSuccess+"
+        myLogD(TAG,func)
+
         return MaterialDialog.Builder(context)
             .title("Sukses")
             .positiveText("Ok")
@@ -31,6 +39,9 @@ class SimpleMaterialDialog(val context: Context) {
     }
 
     fun dialogError(): MaterialDialog.Builder {
+        val func = "dialogError+"
+        myLogD(TAG,func)
+
         return MaterialDialog.Builder(context)
             .title("Warning")
             .positiveText("Ok")
@@ -42,6 +53,9 @@ class SimpleMaterialDialog(val context: Context) {
     }
 
     fun dialogWarning(): MaterialDialog.Builder {
+        val func = "dialogWarning+"
+        myLogD(TAG,func)
+
         return MaterialDialog.Builder(context)
             .title("Warning")
             .positiveText("Ok")
