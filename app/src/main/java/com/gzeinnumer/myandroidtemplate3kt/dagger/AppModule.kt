@@ -11,6 +11,7 @@ import com.gzeinnumer.myandroidtemplate3kt.util.FORMAT_yyyy_MM_DD_HH_mm_ss
 import com.gzeinnumer.myandroidtemplate3kt.util.NetworkAvailable
 import com.gzeinnumer.myandroidtemplate3kt.util.TokenInterceptor
 import com.gzeinnumer.myandroidtemplate3kt.util.URL_PATH
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -58,6 +59,7 @@ class AppModule {
     fun providesRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
         .baseUrl(URL_PATH)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
