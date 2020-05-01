@@ -1,6 +1,5 @@
 package com.gzeinnumer.myandroidtemplate3kt.util
 
-import android.content.Context
 import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import okhttp3.Interceptor
 import java.io.IOException

@@ -1,6 +1,5 @@
 package com.gzeinnumer.myandroidtemplate3kt.base
 
-
 class BaseHttpCode{
     companion object{
         const val HTTP_1_SUCCESS = 200

@@ -13,4 +13,7 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="warning_back">Warning Back</string>
 </resources>

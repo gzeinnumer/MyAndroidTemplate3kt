@@ -108,4 +108,11 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     implementation "androidx.room:room-guava:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
+
+    //Dialog
+    implementation 'com.github.d-max:spots-dialog:1.1@aar'
+    //toast
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
+    //material dialog
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 }

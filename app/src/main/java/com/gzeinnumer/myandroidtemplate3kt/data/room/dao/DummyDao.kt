@@ -7,6 +7,7 @@ import com.gzeinnumer.myandroidtemplate3kt.data.room.table.DummyTable
 
 @Dao
 abstract class DummyDao: BaseDao<DummyTable> {
+
     @Query("SELECT * FROM dummy")
     abstract fun getAll(): List<DummyTable>
 
