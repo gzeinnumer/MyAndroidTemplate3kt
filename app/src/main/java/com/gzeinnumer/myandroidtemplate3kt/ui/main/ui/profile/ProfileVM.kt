@@ -1,13 +1,14 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.profile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
+import javax.inject.Inject
 
-class ProfileVM : ViewModel() {
+class ProfileVM @Inject constructor(private val sessionManager: SessionManager) : ViewModel() {
+    private val TAG = "ProfileVM"
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is profile Fragment"
+    init {
+        Log.d(TAG, "ProfileVM: ready...")
     }
-    val text: LiveData<String> = _text
 }

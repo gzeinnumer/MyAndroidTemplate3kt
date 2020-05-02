@@ -1,13 +1,64 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.*
+import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
+import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
+import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
+import com.gzeinnumer.myandroidtemplate3kt.data.network.mainApi.MainApi
+import io.reactivex.functions.Function
+import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
+import javax.inject.Inject
 
-class PostVM : ViewModel() {
+class PostVM @Inject constructor(val sessionManager: SessionManager, val mainApi: MainApi): ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is post Fragment"
+    companion object {
+        private const val TAG = "PostVM"
     }
-    val text: LiveData<String> = _text
+
+    init {
+        Log.d(TAG, "PostVM: ready")
+    }
+
+    var posts : MediatorLiveData<BaseResource<List<ResponsePost>>>? = null
+    fun observePosts(): LiveData<BaseResource<List<ResponsePost>>>? {
+        if (posts == null) {
+            posts = MediatorLiveData<BaseResource<List<ResponsePost>>>()
+            posts?.value = BaseResource.loading()
+            val source: LiveData<BaseResource<List<ResponsePost>>> =
+                LiveDataReactiveStreams.fromPublisher(
+                    mainApi.getPotsFromUserRx1(1)
+                        .onErrorReturn{
+                            Log.d(TAG, "apply: ", it)
+                            val responsePost = ResponsePost()
+                            responsePost.id = -1
+                            val p: ArrayList<ResponsePost> = ArrayList<ResponsePost>()
+                            p.add(responsePost)
+                            p
+                        }
+                        .map(object :
+                            Function<List<ResponsePost>, BaseResource<List<ResponsePost>>> {
+                            override fun apply(t: List<ResponsePost>): BaseResource<List<ResponsePost>> {
+                                if (t.isNotEmpty()) {
+                                    if (t[0].id == -1) {
+                                        return BaseResource.error("Ada yang salah")
+                                    }
+                                }
+                                return BaseResource.success("Success dapat data",t)
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                )
+            posts?.addSource(
+                source
+            ) { listMainResource ->
+                posts?.value = listMainResource
+                posts?.removeSource(
+                    source
+                )
+            }
+        }
+        return posts
+    }
 }
