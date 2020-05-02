@@ -47,8 +47,18 @@ class PostFragment : BaseFragment() {
         val func = "onViewCreated+"
         myLogD(TAG, func)
 
+        initSwipeRefresh()
         initRecyclerView()
         subscribeObservers()
+    }
+
+    private fun initSwipeRefresh() {
+        val func = "initSwipeRefresh+"
+        myLogD(TAG, func)
+        binding.swipeToRefresh.setOnRefreshListener {
+            subscribeObservers()
+            onSwipeToRefresh(false)
+        }
     }
 
     private fun initRecyclerView() {
@@ -72,22 +82,26 @@ class PostFragment : BaseFragment() {
                     when(it.status){
                         BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
                             myLogD(TAG, func + "STATUS_1_SUCCESS")
-                            onHideLoading()
+                            onSwipeToRefresh(false)
                             onShowSucces(it.message)
                             it.data?.let { it1 -> postsRecyclerAdapter.setPosts(it1) }
                         }
                         BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
                             myLogD(TAG, func + "STATUS_2_ERROR")
-                            onHideLoading()
+                            onSwipeToRefresh(false)
                             onShowError(it.message)
                         }
                         BaseResource.BaseResourceStatus.STATUS_6_LOADING -> {
                             myLogD(TAG, func + "STATUS_6_LOADING")
-                            onShowLoading()
+                            onSwipeToRefresh(true)
                         }
                     }
                 }
             }
         )
+    }
+
+    private fun onSwipeToRefresh(status: Boolean) {
+        binding.swipeToRefresh.isRefreshing = status
     }
 }
