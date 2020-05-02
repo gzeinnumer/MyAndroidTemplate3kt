@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
 import com.gzeinnumer.myandroidtemplate3kt.databinding.FragmentProfileBinding
@@ -32,5 +33,16 @@ class ProfileFragment : DaggerFragment() {
         binding = FragmentProfileBinding.inflate(inflater)
         viewModel = ViewModelProviders.of(this, providerFactory)[ProfileVM::class.java]
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val func = "onViewCreated+"
+        myLogD(TAG, func)
+
+        viewModel.getUserData()?.observe(requireActivity(), Observer {
+            binding.email.text = it.email
+            binding.username.text = it.username
+            binding.website.text = it.website
+        })
     }
 }

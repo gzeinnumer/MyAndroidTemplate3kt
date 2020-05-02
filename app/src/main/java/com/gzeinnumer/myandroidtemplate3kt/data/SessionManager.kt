@@ -40,6 +40,18 @@ class SessionManager(private val context: Context) {
     val userId: String?
         get() = prefs.getString(KEY_ID, "")
 
+    val name: String?
+        get() = prefs.getString(KEY_NAME, "")
+
+    val username: String?
+        get() = prefs.getString(KEY_USERNAME, "")
+
+    val email: String?
+        get() = prefs.getString(KEY_EMAIL, "")
+
+    val website: String?
+        get() = prefs.getString(KEY_WEBSITE, "")
+
     val token: String?
         get() = prefs.getString(KEY_TOKEN, "")
 

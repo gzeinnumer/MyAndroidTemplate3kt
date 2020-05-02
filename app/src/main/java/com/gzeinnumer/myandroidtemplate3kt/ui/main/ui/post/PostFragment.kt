@@ -64,8 +64,8 @@ class PostFragment : BaseFragment() {
         val func = "subscribeObservers+"
         myLogD(TAG, func)
 
-        viewModel.observePosts()!!.removeObservers(viewLifecycleOwner)
-        viewModel.observePosts()!!.observe(viewLifecycleOwner,
+        viewModel.observePosts()?.removeObservers(viewLifecycleOwner)
+        viewModel.observePosts()?.observe(viewLifecycleOwner,
             Observer {
                 if(it != null){
                     myLogD(TAG, func+it.data)

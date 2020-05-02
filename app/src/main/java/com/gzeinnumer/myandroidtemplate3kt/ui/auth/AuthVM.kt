@@ -62,7 +62,7 @@ class AuthVM @Inject constructor(private val authApi: AuthApi, private val sessi
 
     private val stateSession = MediatorLiveData<Boolean>()
 
-    fun cekSession(): MediatorLiveData<Boolean> {
+    fun cekSession(): LiveData<Boolean> {
         val func = "cekSession+" + sessionManager.userId
         myLogD(TAG, func)
         if (sessionManager.userId.equals("")) {
