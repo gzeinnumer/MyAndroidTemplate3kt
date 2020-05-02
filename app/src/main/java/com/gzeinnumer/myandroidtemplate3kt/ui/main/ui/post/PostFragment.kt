@@ -49,14 +49,15 @@ class PostFragment : BaseFragment() {
 
         initSwipeRefresh()
         initRecyclerView()
-        subscribeObservers()
+        subscribeObservers(false)
     }
 
     private fun initSwipeRefresh() {
         val func = "initSwipeRefresh+"
         myLogD(TAG, func)
+
         binding.swipeToRefresh.setOnRefreshListener {
-            subscribeObservers()
+            subscribeObservers(true)
             onSwipeToRefresh(false)
         }
     }
@@ -70,12 +71,12 @@ class PostFragment : BaseFragment() {
         binding.recyclerView.adapter = postsRecyclerAdapter
     }
 
-    private fun subscribeObservers() {
+    private fun subscribeObservers(isLoadNew: Boolean) {
         val func = "subscribeObservers+"
         myLogD(TAG, func)
 
-        viewModel.observePosts()?.removeObservers(viewLifecycleOwner)
-        viewModel.observePosts()?.observe(viewLifecycleOwner,
+        viewModel.observePosts(isLoadNew)?.removeObservers(viewLifecycleOwner)
+        viewModel.observePosts(isLoadNew)?.observe(viewLifecycleOwner,
             Observer {
                 if(it != null){
                     myLogD(TAG, func+it.data)

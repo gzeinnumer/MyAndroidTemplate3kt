@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.gzeinnumer.myandroidtemplate3kt.base.BaseFragment
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
 import com.gzeinnumer.myandroidtemplate3kt.databinding.FragmentProfileBinding
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class ProfileFragment : DaggerFragment() {
+class ProfileFragment : BaseFragment() {
 
     private val TAG = "ProfileFragment"
 

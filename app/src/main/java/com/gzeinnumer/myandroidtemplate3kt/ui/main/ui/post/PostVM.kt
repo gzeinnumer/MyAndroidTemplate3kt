@@ -9,13 +9,20 @@ import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
 import com.gzeinnumer.myandroidtemplate3kt.data.network.mainApi.MainApi
+import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
+import com.gzeinnumer.myandroidtemplate3kt.util.NetworkAvailable
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
-class PostVM @Inject constructor(val sessionManager: SessionManager, val mainApi: MainApi): ViewModel() {
+class PostVM @Inject constructor(
+    private val sessionManager: SessionManager,
+    private val mainApi: MainApi,
+    private val db: AppDatabase,
+    private val networkAvailable: NetworkAvailable
+) : ViewModel() {
 
     companion object {
         private const val TAG = "PostVM"
@@ -25,18 +32,34 @@ class PostVM @Inject constructor(val sessionManager: SessionManager, val mainApi
         Log.d(TAG, "PostVM: ready")
     }
 
-    var posts : MediatorLiveData<BaseResource<List<ResponsePost>>>? = null
-    fun observePosts(): LiveData<BaseResource<List<ResponsePost>>>? {
+    var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? =
+        MediatorLiveData<BaseResource<List<ResponsePost>>>()
+
+    fun observePosts(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
         val func = "observePosts+"
         myLogD(TAG, func)
 
-        if (posts == null) {
-            posts = MediatorLiveData<BaseResource<List<ResponsePost>>>()
-            posts?.value = BaseResource.loading()
+        posts?.value = BaseResource.loading()
+        if (!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) {
+            myLogD(TAG, func + "Load from api")
+            loadDataPostFromServer()
+        } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
+            myLogD(TAG, func + "Load from room")
+            val data: List<ResponsePost> = db.storeResponsePostDao().getAll()
+            posts?.setValue(BaseResource.success("Success dapat data ", data))
+        } else if (isLoadNew) {
+            myLogD(TAG, func + "Load new data from api")
+            loadDataPostFromServer()
+        }
+        return posts
+    }
+
+    private fun loadDataPostFromServer() {
+        if (networkAvailable.isNetworkAvailable()) {
             val source: LiveData<BaseResource<List<ResponsePost>>> =
                 LiveDataReactiveStreams.fromPublisher(
                     mainApi.getPotsFromUserRx1(sessionManager.userId?.toInt()!!)
-                        .onErrorReturn{
+                        .onErrorReturn {
                             Log.d(TAG, "apply: ", it)
                             val responsePost = ResponsePost()
                             responsePost.id = -1
@@ -46,13 +69,14 @@ class PostVM @Inject constructor(val sessionManager: SessionManager, val mainApi
                         }
                         .map(object :
                             Function<List<ResponsePost>, BaseResource<List<ResponsePost>>> {
-                            override fun apply(t: List<ResponsePost>): BaseResource<List<ResponsePost>> {
-                                if (t.isNotEmpty()) {
-                                    if (t[0].id == -1) {
+                            override fun apply(listResponsePost: List<ResponsePost>): BaseResource<List<ResponsePost>> {
+                                if (listResponsePost.isNotEmpty()) {
+                                    if (listResponsePost[0].id == -1) {
                                         return BaseResource.error("Ada yang salah")
                                     }
                                 }
-                                return BaseResource.success("Success dapat data",t)
+                                db.storeResponsePostDao().insertAll(listResponsePost)
+                                return BaseResource.success("Success dapat data", listResponsePost)
                             }
                         })
                         .subscribeOn(Schedulers.io())
@@ -65,7 +89,8 @@ class PostVM @Inject constructor(val sessionManager: SessionManager, val mainApi
                     source
                 )
             }
+        } else {
+            posts?.setValue(BaseResource.error("Hubungkan ke internet"))
         }
-        return posts
     }
 }

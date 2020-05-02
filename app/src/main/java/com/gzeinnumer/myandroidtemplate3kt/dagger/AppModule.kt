@@ -26,7 +26,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesContext(app: MyApp): Context {
+    fun providesContext(app: Application): Context {
         return app.applicationContext
     }
 
@@ -70,5 +70,5 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context)
+    fun providesAppDatabase(app: Application): AppDatabase = AppDatabase.getInstance(app)
 }
