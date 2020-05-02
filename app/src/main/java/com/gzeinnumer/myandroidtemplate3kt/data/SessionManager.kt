@@ -33,6 +33,7 @@ class SessionManager(private val context: Context) {
             putString(KEY_USERNAME, data.username)
             putString(KEY_EMAIL, data.email)
             putString(KEY_WEBSITE, data.website)
+            apply()
         }
     }
 

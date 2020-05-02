@@ -3,7 +3,6 @@ package com.gzeinnumer.myandroidtemplate3kt.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
@@ -25,6 +24,17 @@ class AuthActivity : BaseActivity() {
     lateinit var providerFactory: ViewModelProviderFactory
     lateinit var viewModel: AuthVM
 
+    override fun onStart() {
+        super.onStart()
+        val func = "onStart+"
+        myLogD(TAG, func)
+
+        viewModel.cekSession().observe(this, Observer {
+            if (it) {
+                onSuccessLogin()
+            }
+        })
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -61,7 +71,7 @@ class AuthActivity : BaseActivity() {
                 when (it.status) {
                     BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
                         onHideLoading()
-                        onShowSucces(it.message)
+                        onSuccess(it.message)
                         onSuccessLogin()
                     }
                     BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {

@@ -1,7 +1,11 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.auth
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
+import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponseLogin
 import com.gzeinnumer.myandroidtemplate3kt.data.network.authApi.AuthApi
 import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
@@ -10,7 +14,7 @@ import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class AuthVM @Inject constructor(private val authApi: AuthApi) : ViewModel() {
+class AuthVM @Inject constructor(private val authApi: AuthApi, private val sessionManager: SessionManager) : ViewModel() {
 
     companion object {
         private const val TAG = "AuthVM"
@@ -44,6 +48,7 @@ class AuthVM @Inject constructor(private val authApi: AuthApi) : ViewModel() {
                         if(responseLogin.id == -1){
                             return BaseResource.error("Gagal login")
                         }
+                        sessionManager.setAuth(responseLogin)
                         return BaseResource.success("Success login",responseLogin)
                     }
                 })
@@ -55,4 +60,16 @@ class AuthVM @Inject constructor(private val authApi: AuthApi) : ViewModel() {
         }
     }
 
+    private val stateSession = MediatorLiveData<Boolean>()
+
+    fun cekSession(): MediatorLiveData<Boolean> {
+        val func = "cekSession+" + sessionManager.userId
+        myLogD(TAG, func)
+        if (sessionManager.userId.equals("")) {
+            stateSession.setValue(false)
+        } else {
+            stateSession.setValue(true)
+        }
+        return stateSession
+    }
 }
