@@ -90,12 +90,14 @@ class MainActivity : BaseActivity() {
                     if (!it) {
                         startActivity(Intent(applicationContext, AuthActivity::class.java))
                         finish()
+                        onTransision()
                     }
                 })
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()

@@ -1,6 +1,7 @@
 package com.gzeinnumer.myandroidtemplate3kt.base
 
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
@@ -27,6 +28,12 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
 
         alertLoading = builderLoading.build()
 
+    }
+
+    protected open fun onTransision() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.fade_in_anim, R.anim.fade_out_anim)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

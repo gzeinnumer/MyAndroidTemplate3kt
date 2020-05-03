@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
@@ -90,5 +91,6 @@ class AuthActivity : BaseActivity() {
 
         startActivity(Intent(applicationContext, MainActivity::class.java))
         finish()
+        onTransision()
     }
 }
