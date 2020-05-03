@@ -1,7 +1,11 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -10,8 +14,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
+import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
 import com.gzeinnumer.myandroidtemplate3kt.databinding.ActivityMainBinding
+import com.gzeinnumer.myandroidtemplate3kt.ui.auth.AuthActivity
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
@@ -20,6 +27,10 @@ class MainActivity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+    lateinit var viewModel: MainVM
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val func = "onCreate+"
@@ -27,6 +38,8 @@ class MainActivity : BaseActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProviders.of(this, providerFactory)[MainVM::class.java]
 
         initToolBar()
         initFab()
@@ -69,6 +82,20 @@ class MainActivity : BaseActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.logout->{
+                viewModel.logout()
+                viewModel.cekSession().observe(this, Observer {
+                    if (!it) {
+                        startActivity(Intent(applicationContext, AuthActivity::class.java))
+                        finish()
+                    }
+                })
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()

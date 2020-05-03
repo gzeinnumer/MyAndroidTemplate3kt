@@ -58,7 +58,6 @@ class PostFragment : BaseFragment() {
 
         binding.swipeToRefresh.setOnRefreshListener {
             subscribeObservers(true)
-            onSwipeToRefresh(false)
         }
     }
 
@@ -71,10 +70,12 @@ class PostFragment : BaseFragment() {
         binding.recyclerView.adapter = postsRecyclerAdapter
     }
 
+    var isFirst = false
     private fun subscribeObservers(isLoadNew: Boolean) {
         val func = "subscribeObservers+"
         myLogD(TAG, func)
 
+        isFirst = true
         viewModel.observePosts(isLoadNew)?.removeObservers(viewLifecycleOwner)
         viewModel.observePosts(isLoadNew)?.observe(viewLifecycleOwner,
             Observer {
@@ -90,7 +91,10 @@ class PostFragment : BaseFragment() {
                         BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
                             myLogD(TAG, func + "STATUS_2_ERROR")
                             onSwipeToRefresh(false)
-                            onShowError(it.message)
+                            if(isFirst){
+                                isFirst = false
+                                onShowError(it.message)
+                            }
                         }
                         BaseResource.BaseResourceStatus.STATUS_6_LOADING -> {
                             myLogD(TAG, func + "STATUS_6_LOADING")

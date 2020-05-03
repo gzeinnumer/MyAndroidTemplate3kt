@@ -55,5 +55,10 @@ class SessionManager(private val context: Context) {
     val token: String?
         get() = prefs.getString(KEY_TOKEN, "")
 
-
+    fun destroy() {
+        editor.apply{
+            clear()
+            apply()
+        }
+    }
 }

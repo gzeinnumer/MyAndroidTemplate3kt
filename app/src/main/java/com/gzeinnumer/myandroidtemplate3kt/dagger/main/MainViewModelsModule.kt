@@ -2,6 +2,7 @@ package com.gzeinnumer.myandroidtemplate3kt.dagger.main
 
 import androidx.lifecycle.ViewModel
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelKey
+import com.gzeinnumer.myandroidtemplate3kt.ui.main.MainVM
 import com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post.PostVM
 import com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.profile.ProfileVM
 import dagger.Binds
@@ -20,4 +21,9 @@ abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(PostVM::class)
     abstract fun bidPostViewModel(postVM: PostVM): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainVM::class)
+    abstract fun bidMainViewModel(mainVM: MainVM): ViewModel
 }
