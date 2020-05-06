@@ -7,12 +7,10 @@
     android:background="#fff">
 
     <TextView
+        style="@style/MyTextContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:textColor="#000"
-        android:textSize="17sp"
         android:text="this is a title"/>
-
 
 </LinearLayout>

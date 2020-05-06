@@ -85,15 +85,15 @@ class PostFragment : BaseFragment() {
                         BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
                             myLogD(TAG, func + "STATUS_1_SUCCESS")
                             onSwipeToRefresh(false)
-                            onShowSucces(it.message)
-                            it.data?.let { it1 -> postsRecyclerAdapter.setPosts(it1) }
+                            it.message?.let { it1 -> onShowSucces(it1).show() }
+                            it.data?.let { it1 -> postsRecyclerAdapter.insertData(it1) }
                         }
                         BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
                             myLogD(TAG, func + "STATUS_2_ERROR")
                             onSwipeToRefresh(false)
                             if(isFirst){
                                 isFirst = false
-                                onShowError(it.message)
+                                it.message?.let { it1 -> onShowError(it1).show() }
                             }
                         }
                         BaseResource.BaseResourceStatus.STATUS_6_LOADING -> {

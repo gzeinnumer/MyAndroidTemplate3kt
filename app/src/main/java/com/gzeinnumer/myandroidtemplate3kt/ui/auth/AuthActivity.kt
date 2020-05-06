@@ -77,7 +77,7 @@ class AuthActivity : BaseActivity() {
                     }
                     BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
                         onHideLoading()
-                        onShowError(it.message)
+                        it.message?.let { it1 -> onShowError(it1).show() }
                     }
                     BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onShowLoading()
                 }

@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.util.SimpleMaterialDialog
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
@@ -74,71 +75,36 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
         }
     }
 
-    fun onShowWarning(msg: String?) {
+    fun onShowWarning(msg: String?): MaterialDialog.Builder {
         val func = "onShowWarning+"
         myLogD(TAG,func)
 
-        SimpleMaterialDialog(this).dialogWarning()
-            .content(getString(R.string.warning_back))
-            .negativeText(getString(R.string.cancel))
-            .onPositive { _, _ ->
-
-            }
-            .onNegative { _, _ ->
-
-            }
-            .show()
+        //.onPositive((dialog, which) -> { }).onNegative((dialog, which) -> {}).show()
+        return SimpleMaterialDialog(this).dialogWarning().content(getString(R.string.warning_back))
     }
 
-    fun onShowError(msg: String?) {
+    fun onShowError(msg: String): MaterialDialog.Builder {
         val func = "onShowError+"
         myLogD(TAG,func)
 
-        msg?.let {
-            SimpleMaterialDialog(this).dialogError()
-                .content(it)
-                .onPositive { _, _ ->
-
-                }
-                .onNegative { _, _ ->
-
-                }
-                .show()
-        }
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(this).dialogError().content(msg)
     }
 
-    fun onShowSucces(msg: String?) {
+    fun onShowSucces(msg: String): MaterialDialog.Builder {
         val func = "onShowSucces+"
         myLogD(TAG,func)
 
-        msg?.let {
-            SimpleMaterialDialog(this).dialogSuccess()
-                .content(it)
-                .onPositive { _, _ ->
-
-                }
-                .onNegative { _, _ ->
-
-                }
-                .show()
-        }
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(this).dialogSuccess().content(msg)
     }
 
-    fun onShowInfo(msg: String?) {
+    fun onShowInfo(msg: String): MaterialDialog.Builder {
         val func = "onShowInfo+"
         myLogD(TAG,func)
 
-        msg?.let {
-            SimpleMaterialDialog(this).dialogInfo()
-                .content(it)
-                .onPositive { _, _ ->
-
-                }
-                .onNegative { _, _ ->
-
-                }
-                .show()
-        }
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(this).dialogInfo().content(msg)
     }
 
     override fun onDestroy() {

@@ -24,9 +24,7 @@ class PostVM @Inject constructor(
     private val networkAvailable: NetworkAvailable
 ) : ViewModel() {
 
-    companion object {
-        private const val TAG = "PostVM"
-    }
+    val TAG = "PostVM"
 
     init {
         Log.d(TAG, "PostVM: ready")

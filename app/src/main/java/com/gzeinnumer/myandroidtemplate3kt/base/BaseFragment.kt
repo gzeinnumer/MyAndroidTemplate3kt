@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.afollestad.materialdialogs.MaterialDialog
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.util.SimpleMaterialDialog
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
@@ -68,52 +69,36 @@ abstract class BaseFragment : DaggerFragment() {
         myLogD(TAG, func)
         alertLoading.show()
     }
-
-    protected fun onShowWarning(msg: String?) {
+    fun onShowWarning(msg: String?): MaterialDialog.Builder {
         val func = "onShowWarning+"
-        myLogD(TAG, func)
-        SimpleMaterialDialog(requireContext()).dialogWarning()
-            .content(getString(R.string.warning_back)+" "+msg)
-            .negativeText(getString(R.string.cancel))
-            .onPositive { _, _ -> }
-            .onNegative { _, _ -> }
-            .show()
+        myLogD(TAG,func)
+
+        //.onPositive((dialog, which) -> { }).onNegative((dialog, which) -> {}).show()
+        return SimpleMaterialDialog(requireContext()).dialogWarning().content(getString(R.string.warning_back))
     }
 
-    protected fun onShowError(msg: String?) {
+    fun onShowError(msg: String): MaterialDialog.Builder {
         val func = "onShowError+"
-        myLogD(TAG, func)
-        msg?.let {
-            SimpleMaterialDialog(requireContext()).dialogError()
-                .content(it)
-                .onPositive { _, _ -> }
-                .onNegative { _, _ -> }
-                .show()
-        }
+        myLogD(TAG,func)
+
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(requireContext()).dialogError().content(msg)
     }
 
-    protected fun onShowSucces(msg: String?) {
+    fun onShowSucces(msg: String): MaterialDialog.Builder {
         val func = "onShowSucces+"
-        myLogD(TAG, func)
-        msg?.let {
-            SimpleMaterialDialog(requireContext()).dialogSuccess()
-                .content(it)
-                .onPositive { _, _ -> }
-                .onNegative { _, _ -> }
-                .show()
-        }
+        myLogD(TAG,func)
+
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(requireContext()).dialogSuccess().content(msg)
     }
 
-    protected fun onShowInfo(msg: String?) {
+    fun onShowInfo(msg: String): MaterialDialog.Builder {
         val func = "onShowInfo+"
-        myLogD(TAG, func)
-        msg?.let {
-            SimpleMaterialDialog(requireContext()).dialogInfo()
-                .content(it)
-                .onPositive { _, _ -> }
-                .onNegative { _, _ -> }
-                .show()
-        }
+        myLogD(TAG,func)
+
+        //.onPositive((dialog, which) -> { }).show()
+        return SimpleMaterialDialog(requireContext()).dialogInfo().content(msg)
     }
 
     companion object {

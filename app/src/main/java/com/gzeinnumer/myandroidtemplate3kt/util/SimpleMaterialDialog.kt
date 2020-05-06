@@ -59,6 +59,7 @@ class SimpleMaterialDialog(val context: Context) {
         return MaterialDialog.Builder(context)
             .title("Warning")
             .positiveText("Ok")
+            .negativeText(context.getString(R.string.cancel))
             .iconRes(R.drawable.ic_warning_error_yellow_24dp)
             .titleColorRes(R.color.red_500)
             .contentColorRes(android.R.color.black)

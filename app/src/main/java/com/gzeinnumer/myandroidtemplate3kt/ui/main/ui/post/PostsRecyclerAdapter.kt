@@ -1,49 +1,50 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
+import com.gzeinnumer.myandroidtemplate3kt.databinding.LayoutPostListItemBinding
+import com.gzeinnumer.myandroidtemplate3kt.util.MyDiffUtilsCallBack
 import java.util.*
 
-class PostsRecyclerAdapter :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var posts: List<ResponsePost> = ArrayList<ResponsePost>()
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_post_list_item, parent, false)
-        return PostViewHolder(view)
-    }
+class PostsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int
-    ) {
-        (holder as PostViewHolder).bind(posts[position])
+    private var data = mutableListOf<ResponsePost>()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        PostViewHolder(LayoutPostListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as PostViewHolder).bind(data[position])
+//        holder.binding.title
     }
 
     override fun getItemCount(): Int {
-        return posts.size
+        return data.size
     }
 
-    fun setPosts(posts: List<ResponsePost>) {
-        this.posts = posts
-        notifyDataSetChanged()
+    fun insertData(newList: List<ResponsePost>) {
+        val callBack = MyDiffUtilsCallBack(data, newList)
+        val diffResult = DiffUtil.calculateDiff(callBack)
+        this.data.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class PostViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
-        var title: TextView = itemView.findViewById(R.id.title)
+    fun updateData(oldList: List<ResponsePost>) {
+        val callBack = MyDiffUtilsCallBack(data, oldList)
+        val diffResult = DiffUtil.calculateDiff(callBack)
+        this.data.clear()
+        this.data.addAll(oldList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    inner class PostViewHolder(val binding: LayoutPostListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(post: ResponsePost) {
-            title.text = post.title
+            binding.title.text = post.title
         }
-
     }
 }
 
