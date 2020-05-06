@@ -18,8 +18,8 @@ import java.util.*
 import javax.inject.Inject
 
 class PostVM @Inject constructor(
+    private val repository: PostRepositoryImpl,
     private val sessionManager: SessionManager,
-    private val mainApi: MainApi,
     private val db: AppDatabase,
     private val networkAvailable: NetworkAvailable
 ) : ViewModel() {
@@ -27,11 +27,10 @@ class PostVM @Inject constructor(
     val TAG = "PostVM"
 
     init {
-        Log.d(TAG, "PostVM: ready")
+        myLogD(TAG, "PostVM: ready")
     }
 
-    var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? =
-        MediatorLiveData<BaseResource<List<ResponsePost>>>()
+    var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? = MediatorLiveData<BaseResource<List<ResponsePost>>>()
 
     fun observePosts(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
         val func = "observePosts+"
@@ -56,36 +55,11 @@ class PostVM @Inject constructor(
         if (networkAvailable.isNetworkAvailable()) {
             val source: LiveData<BaseResource<List<ResponsePost>>> =
                 LiveDataReactiveStreams.fromPublisher(
-                    mainApi.getPotsFromUserRx1(sessionManager.userId?.toInt()!!)
-                        .onErrorReturn {
-                            Log.d(TAG, "apply: ", it)
-                            val responsePost = ResponsePost()
-                            responsePost.id = -1
-                            val p: ArrayList<ResponsePost> = ArrayList<ResponsePost>()
-                            p.add(responsePost)
-                            p
-                        }
-                        .map(object :
-                            Function<List<ResponsePost>, BaseResource<List<ResponsePost>>> {
-                            override fun apply(listResponsePost: List<ResponsePost>): BaseResource<List<ResponsePost>> {
-                                if (listResponsePost.isNotEmpty()) {
-                                    if (listResponsePost[0].id == -1) {
-                                        return BaseResource.error("Ada yang salah")
-                                    }
-                                }
-                                db.storeResponsePostDao().insertAll(listResponsePost)
-                                return BaseResource.success("Success dapat data", listResponsePost)
-                            }
-                        })
-                        .subscribeOn(Schedulers.io())
+                    repository.getPotsFromUserRx1(sessionManager.userId?.toInt()!!)
                 )
-            posts?.addSource(
-                source
-            ) { listMainResource ->
+            posts?.addSource(source) { listMainResource ->
                 posts?.value = listMainResource
-                posts?.removeSource(
-                    source
-                )
+                posts?.removeSource(source)
             }
         } else {
             posts?.setValue(BaseResource.error("Hubungkan ke internet"))

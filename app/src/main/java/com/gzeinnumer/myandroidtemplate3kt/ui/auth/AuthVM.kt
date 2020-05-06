@@ -14,17 +14,19 @@ import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class AuthVM @Inject constructor(private val authApi: AuthApi, private val sessionManager: SessionManager) : ViewModel() {
+class AuthVM @Inject constructor(
+    private val repository: AuthRepositoryImpl,
+    private val sessionManager: SessionManager
+) : ViewModel() {
 
-    companion object {
-        private const val TAG = "AuthVM"
-    }
+    val TAG = "AuthVM"
 
     init {
         myLogD(TAG, "AuthVM: viewmodel sudah bekerja")
     }
 
-    private val authUser: MediatorLiveData<BaseResource<ResponseLogin>> = MediatorLiveData<BaseResource<ResponseLogin>>()
+    private val authUser: MediatorLiveData<BaseResource<ResponseLogin>> =
+        MediatorLiveData<BaseResource<ResponseLogin>>()
 
     fun stateUser(): MediatorLiveData<BaseResource<ResponseLogin>> {
         return authUser
@@ -32,29 +34,13 @@ class AuthVM @Inject constructor(private val authApi: AuthApi, private val sessi
 
     fun authWithId(userId: Int) {
         val func = "authWithId+"
-        myLogD(AppDatabase.TAG,func)
+        myLogD(AppDatabase.TAG, func)
 
         authUser.value = BaseResource.loading()
         val source: LiveData<BaseResource<ResponseLogin>> = LiveDataReactiveStreams.fromPublisher(
-            authApi.getUserRx1(userId)
-                .onErrorReturn {
-                    myLogD(TAG, it.message.toString())
-                    val responseLogin = ResponseLogin()
-                    responseLogin.id = -1
-                    responseLogin
-                }
-                .map(object : Function<ResponseLogin, BaseResource<ResponseLogin>>{
-                    override fun apply(responseLogin: ResponseLogin): BaseResource<ResponseLogin> {
-                        if(responseLogin.id == -1){
-                            return BaseResource.error("Gagal login")
-                        }
-                        sessionManager.setAuth(responseLogin)
-                        return BaseResource.success("Success login",responseLogin)
-                    }
-                })
-                .subscribeOn(Schedulers.io())
+            repository.authWithId(userId)
         )
-        authUser.addSource(source) { responseLoginBaseResource->
+        authUser.addSource(source) { responseLoginBaseResource ->
             authUser.value = responseLoginBaseResource
             authUser.removeSource(source)
         }
