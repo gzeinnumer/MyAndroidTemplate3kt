@@ -3,11 +3,9 @@ package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post
 import android.util.Log
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.dagger.main.MainScope
-import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
 import com.gzeinnumer.myandroidtemplate3kt.data.network.mainApi.MainApi
 import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
-import com.gzeinnumer.myandroidtemplate3kt.util.NetworkAvailable
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import io.reactivex.Flowable
 import io.reactivex.functions.Function
@@ -28,7 +26,10 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override fun getPotsFromUserRx1(userId: Int): Flowable<BaseResource<List<ResponsePost>>> {
-        return mainApi.getPotsFromUserRx1(userId)
+        val func = "getPotsFromUserRx1+"
+        myLogD(TAG, func)
+
+        return mainApi.getPostFromUserRx1(userId)
             .onErrorReturn {
                 Log.d(TAG, "apply: ", it)
                 val responsePost = ResponsePost()

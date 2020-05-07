@@ -11,6 +11,11 @@ import retrofit2.http.Path
 
 interface AuthApi {
 
+    //default-retrofit
+    //https://jsonplaceholder.typicode.com/users/1
+    @GET("/users/{id}")
+    fun getUserCall(@Path("id") id: Int): Call<ResponseLogin>
+
     //rx-java-type-1
     //https://jsonplaceholder.typicode.com/users/1
     @GET("/users/{id}")
@@ -25,9 +30,5 @@ interface AuthApi {
     @GET("/users/{id}")
     fun getUserCoroutines(@Path("id") id: Int): Deferred<Response<ResponseLogin>>
 
-    //default-retrofit
-    //https://jsonplaceholder.typicode.com/users/1
-    @GET("/users/{id}")
-    fun getUser(@Path("id") id: Int): Call<ResponseLogin>
 
 }

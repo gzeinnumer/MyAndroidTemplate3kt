@@ -10,29 +10,32 @@ import retrofit2.http.Query
 
 interface MainApi {
 
+    //default-retrofit
+    //https://jsonplaceholder.typicode.com/posts?userId=1
+    @GET("posts")
+    fun getPostFromUserCall(
+        @Query("userId") id: Int
+    ): Call<List<ResponsePost>>
+
     //rx-java-type-1
     //https://jsonplaceholder.typicode.com/posts?userId=1
     @GET("posts")
-    fun getPotsFromUserRx1(
+    fun getPostFromUserRx1(
         @Query("userId") id: Int
     ): Flowable<List<ResponsePost>>
 
     //rx-java-type-2
     //https://jsonplaceholder.typicode.com/posts?userId=1
     @GET("posts")
-    fun getPotsFromUserRx2(
+    fun getPostFromUserRx2(
         @Query("userId") id: Int
     ): Observable<List<ResponsePost>>
 
     //coroutines
     //https://jsonplaceholder.typicode.com/posts?userId=1
     @GET("/posts")
-    fun getPotsFromUserCoroutines(@Query("userId") id: Int): Deferred<List<ResponsePost>>
-
-    //default-retrofit
-    //https://jsonplaceholder.typicode.com/posts?userId=1
-    @GET("posts")
-    fun getPotsFromUser(
+    fun getPostFromUserCoroutines(
         @Query("userId") id: Int
-    ): Call<List<ResponsePost>>
+    ): Deferred<List<ResponsePost>>
+
 }

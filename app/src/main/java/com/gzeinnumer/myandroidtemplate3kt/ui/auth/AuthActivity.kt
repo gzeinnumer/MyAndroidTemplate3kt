@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
@@ -48,7 +47,7 @@ class AuthActivity : BaseActivity() {
 
         initOnClick()
 
-        subcribeObservers()
+        subcribeObserversRx1()
     }
 
     private fun initOnClick() {
@@ -59,15 +58,61 @@ class AuthActivity : BaseActivity() {
             if (TextUtils.isEmpty(binding.userIdInput.text.toString())) {
                 return@setOnClickListener
             }
-            viewModel.authWithId(binding.userIdInput.text.toString().toInt())
+            subcribeObserversCall(binding.userIdInput.text.toString().toInt())
+//            viewModel.authWithIdRx1(binding.userIdInput.text.toString().toInt())
+//            subcribeObserversRx2(binding.userIdInput.text.toString().toInt())
         }
     }
 
-    private fun subcribeObservers() {
-        val func = "subcribeObservers+"
+    private fun subcribeObserversCall(userId: Int) {
+        val func = "subcribeObserversCall+"
         myLogD(TAG,func)
 
-        viewModel.stateUser().observe(this, Observer {
+        viewModel.authWithIdCall(userId).observe(this, Observer {
+            if (it != null) {
+                when (it.status) {
+                    BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                        onHideLoading()
+                        onSuccess(it.message)
+                        onSuccessLogin()
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                        onHideLoading()
+                        it.message?.let { it1 -> onShowError(it1).show() }
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onShowLoading()
+                }
+            }
+        })
+    }
+
+    private fun subcribeObserversRx1() {
+        val func = "subcribeObserversRx1+"
+        myLogD(TAG,func)
+
+        viewModel.stateUserRx1().observe(this, Observer {
+            if (it != null) {
+                when (it.status) {
+                    BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                        onHideLoading()
+                        onSuccess(it.message)
+                        onSuccessLogin()
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                        onHideLoading()
+                        it.message?.let { it1 -> onShowError(it1).show() }
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onShowLoading()
+                }
+            }
+        })
+    }
+
+    private fun subcribeObserversRx2(userId: Int) {
+        val func = "subcribeObserversRx2+"
+        myLogD(TAG,func)
+
+        viewModel.authWithIdRx2(userId).observe(this, Observer {
             if (it != null) {
                 when (it.status) {
                     BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {

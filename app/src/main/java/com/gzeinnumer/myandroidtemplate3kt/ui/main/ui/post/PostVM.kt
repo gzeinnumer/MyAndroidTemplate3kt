@@ -32,8 +32,8 @@ class PostVM @Inject constructor(
 
     var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? = MediatorLiveData<BaseResource<List<ResponsePost>>>()
 
-    fun observePosts(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
-        val func = "observePosts+"
+    fun observePostsRx1(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
+        val func = "observePostsRx1+"
         myLogD(TAG, func)
 
         posts?.value = BaseResource.loading()
@@ -52,6 +52,9 @@ class PostVM @Inject constructor(
     }
 
     private fun loadDataPostFromServer() {
+        val func = "loadDataPostFromServer+"
+        myLogD(TAG, func)
+
         if (networkAvailable.isNetworkAvailable()) {
             val source: LiveData<BaseResource<List<ResponsePost>>> =
                 LiveDataReactiveStreams.fromPublisher(
