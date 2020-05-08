@@ -1,6 +1,7 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
 import io.reactivex.Flowable
@@ -9,5 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 
 interface PostRepository {
-    fun getPotsFromUserRx1(userId: Int) : Flowable<BaseResource<List<ResponsePost>>>
+    fun getPostFromUserCall(userId: Int, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
+    fun getPotsFromUserRx1(userId: Int): Flowable<BaseResource<List<ResponsePost>>>
+    fun getPotsFromUserRx2(userId: String?, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
+
 }

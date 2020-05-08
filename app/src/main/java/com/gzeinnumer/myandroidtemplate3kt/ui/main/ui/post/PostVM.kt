@@ -1,6 +1,5 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.post
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
@@ -8,13 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
-import com.gzeinnumer.myandroidtemplate3kt.data.network.mainApi.MainApi
 import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
 import com.gzeinnumer.myandroidtemplate3kt.util.NetworkAvailable
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
-import io.reactivex.functions.Function
-import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 
 class PostVM @Inject constructor(
@@ -32,21 +27,26 @@ class PostVM @Inject constructor(
 
     var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? = MediatorLiveData<BaseResource<List<ResponsePost>>>()
 
+
+    fun observePostsCall(isLoadNew: Boolean) : LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "observePostsCall+"
+        myLogD(TAG, func)
+
+        return repository.getPostFromUserCall(sessionManager.userId?.toInt()!!, isLoadNew)
+    }
+
     fun observePostsRx1(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
         val func = "observePostsRx1+"
         myLogD(TAG, func)
 
         posts?.value = BaseResource.loading()
-        if (!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) {
+        if ((!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) ||isLoadNew) {
             myLogD(TAG, func + "Load from api")
             loadDataPostFromServer()
         } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
             myLogD(TAG, func + "Load from room")
             val data: List<ResponsePost> = db.storeResponsePostDao().getAll()
-            posts?.setValue(BaseResource.success("Success dapat data ", data))
-        } else if (isLoadNew) {
-            myLogD(TAG, func + "Load new data from api")
-            loadDataPostFromServer()
+            posts?.value = BaseResource.success("Success dapat data ", data)
         }
         return posts
     }
@@ -67,5 +67,12 @@ class PostVM @Inject constructor(
         } else {
             posts?.setValue(BaseResource.error("Hubungkan ke internet"))
         }
+    }
+
+    fun observePostsRx2(isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "observePostsRx2+"
+        myLogD(TAG, func)
+
+        return repository.getPotsFromUserRx2(sessionManager.userId, isLoadNew)
     }
 }

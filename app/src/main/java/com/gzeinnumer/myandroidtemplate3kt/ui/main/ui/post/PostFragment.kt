@@ -49,7 +49,9 @@ class PostFragment : BaseFragment() {
 
         initSwipeRefresh()
         initRecyclerView()
+//        subscribeObserversCall(false)
         subscribeObserversRx1(false)
+//        subscribeObserversRx2(false)
     }
 
     private fun initSwipeRefresh() {
@@ -57,7 +59,9 @@ class PostFragment : BaseFragment() {
         myLogD(TAG, func)
 
         binding.swipeToRefresh.setOnRefreshListener {
+//            subscribeObserversCall(true)
             subscribeObserversRx1(true)
+//            subscribeObserversRx2(true)
         }
     }
 
@@ -70,7 +74,40 @@ class PostFragment : BaseFragment() {
         binding.recyclerView.adapter = postsRecyclerAdapter
     }
 
+
     var isFirst = false
+    private fun subscribeObserversCall(isLoadNiew: Boolean){
+        val func = "subscribeObserversCall+"
+        myLogD(TAG, func)
+
+        isFirst = true
+        viewModel.observePostsCall(isLoadNiew).observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                myLogD(TAG, func+it.data)
+                when(it.status){
+                    BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                        myLogD(TAG, func + "STATUS_1_SUCCESS")
+                        onSwipeToRefresh(false)
+                        it.message?.let { it1 -> onShowSucces(it1).show() }
+                        it.data?.let { it1 -> postsRecyclerAdapter.insertData(it1) }
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                        myLogD(TAG, func + "STATUS_2_ERROR")
+                        onSwipeToRefresh(false)
+                        if(isFirst){
+                            isFirst = false
+                            it.message?.let { it1 -> onShowError(it1).show() }
+                        }
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_6_LOADING -> {
+                        myLogD(TAG, func + "STATUS_6_LOADING")
+                        onSwipeToRefresh(true)
+                    }
+                }
+            }
+        })
+
+    }
     private fun subscribeObserversRx1(isLoadNew: Boolean) {
         val func = "subscribeObserversRx1+"
         myLogD(TAG, func)
@@ -104,6 +141,41 @@ class PostFragment : BaseFragment() {
                 }
             }
         )
+    }
+
+    private fun subscribeObserversRx2(isLoadNiew: Boolean) {
+        val func = "subscribeObserversRx2+"
+        myLogD(TAG, func)
+
+        isFirst = true
+        viewModel.observePostsRx2(isLoadNiew).observe(viewLifecycleOwner,
+            Observer {
+                if(it != null){
+                    myLogD(TAG, func+it.data)
+                    when(it.status){
+                        BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                            myLogD(TAG, func + "STATUS_1_SUCCESS")
+                            onSwipeToRefresh(false)
+                            it.message?.let { it1 -> onShowSucces(it1).show() }
+                            it.data?.let { it1 -> postsRecyclerAdapter.insertData(it1) }
+                        }
+                        BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                            myLogD(TAG, func + "STATUS_2_ERROR")
+                            onSwipeToRefresh(false)
+                            if(isFirst){
+                                isFirst = false
+                                it.message?.let { it1 -> onShowError(it1).show() }
+                            }
+                        }
+                        BaseResource.BaseResourceStatus.STATUS_6_LOADING -> {
+                            myLogD(TAG, func + "STATUS_6_LOADING")
+                            onSwipeToRefresh(true)
+                        }
+                    }
+                }
+            }
+        )
+
     }
 
     private fun onSwipeToRefresh(status: Boolean) {

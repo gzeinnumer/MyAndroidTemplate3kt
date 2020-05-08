@@ -58,8 +58,8 @@ class AuthActivity : BaseActivity() {
             if (TextUtils.isEmpty(binding.userIdInput.text.toString())) {
                 return@setOnClickListener
             }
-            subcribeObserversCall(binding.userIdInput.text.toString().toInt())
-//            viewModel.authWithIdRx1(binding.userIdInput.text.toString().toInt())
+//            subcribeObserversCall(binding.userIdInput.text.toString().toInt())
+            viewModel.authWithIdRx1(binding.userIdInput.text.toString().toInt())
 //            subcribeObserversRx2(binding.userIdInput.text.toString().toInt())
         }
     }
