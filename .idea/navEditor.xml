@@ -8,7 +8,7 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="postScreen">
+                  <entry key="nav_post">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
@@ -20,7 +20,19 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="profileScreen">
+                  <entry key="nav_post_local">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="nav_profile">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">

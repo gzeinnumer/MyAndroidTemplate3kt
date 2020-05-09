@@ -70,7 +70,8 @@ class MainActivity : BaseActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.nav_profile,
-                R.id.nav_post
+                R.id.nav_post,
+                R.id.nav_post_local
             ), binding.drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
