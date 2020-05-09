@@ -46,7 +46,7 @@ class PostVM @Inject constructor(
         } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
             myLogD(TAG, func + "Load from room")
             val data: List<ResponsePost> = db.storeResponsePostDao().getAll()
-            posts?.value = BaseResource.success("Success dapat data ", data)
+            posts?.value = BaseResource.success("Success dapat data local", data)
         }
         return posts
     }

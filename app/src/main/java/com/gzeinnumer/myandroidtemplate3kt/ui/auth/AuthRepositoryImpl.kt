@@ -19,6 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
+@Suppress("UNREACHABLE_CODE")
 @AuthScope
 class AuthRepositoryImpl @Inject constructor(
     private val authApi: AuthApi,
@@ -47,12 +48,12 @@ class AuthRepositoryImpl @Inject constructor(
                         data.value = BaseResource.success("Success login", it)
                     }
                 } else {
-                    data.setValue(BaseResource.error("Tidak bisa login"))
+                    data.setValue(BaseResource.error("Tidak bisa login : "+response.code()))
                 }
             }
 
             override fun onFailure(call: Call<ResponseLogin?>, t: Throwable) {
-                data.value = BaseResource.error("Tidak bisa login")
+                data.value = BaseResource.error("Tidak bisa login : "+t.message)
             }
         })
 
@@ -65,17 +66,22 @@ class AuthRepositoryImpl @Inject constructor(
         return authApi.getUserRx1(userId)
             .onErrorReturn {
                 myLogD(TAG, it.message.toString())
-                val responseLogin = ResponseLogin()
-                responseLogin.id = -1
-                responseLogin
+                null
             }
-            .map(object : Function<ResponseLogin, BaseResource<ResponseLogin>> {
-                override fun apply(responseLogin: ResponseLogin): BaseResource<ResponseLogin> {
-                    if (responseLogin.id == -1) {
+            .map(object : Function<Response<ResponseLogin>, BaseResource<ResponseLogin>> {
+                @Suppress("SENSELESS_COMPARISON")
+                override fun apply(responseLoginResponse: Response<ResponseLogin>): BaseResource<ResponseLogin> {
+                    if (responseLoginResponse === null) {
                         return BaseResource.error("Gagal login")
+                    } else {
+                        if(responseLoginResponse.code() == BaseHttpCode.HTTP_1_SUCCESS){
+                            responseLoginResponse.body()?.let {
+                                sessionManager.setAuth(it)
+                                return BaseResource.success("Success login", it)
+                            }
+                        }
+                        return BaseResource.error("Gagal login : " + responseLoginResponse.code())
                     }
-                    sessionManager.setAuth(responseLogin)
-                    return BaseResource.success("Success login", responseLogin)
                 }
             })
             .subscribeOn(Schedulers.io())
@@ -93,10 +99,17 @@ class AuthRepositoryImpl @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
-                sessionManager.setAuth(it)
-                data.value = BaseResource.success("Success login", it)
+                if(it.code() == BaseHttpCode.HTTP_1_SUCCESS){
+                    it.body()?.let {
+                        it1 -> sessionManager.setAuth(it1)
+                        data.value = BaseResource.success("Success login", it1)
+                    }
+                } else {
+                    data.value = BaseResource.error("Gagal Login :  " + it.code())
+                }
+
             }, {
-                data.value = BaseResource.error("Gagal Login")
+                data.value = BaseResource.error("Gagal Login : "+it.message)
             })
 
         return data

@@ -19,12 +19,12 @@ interface AuthApi {
     //rx-java-type-1
     //https://jsonplaceholder.typicode.com/users/1
     @GET("/users/{id}")
-    fun getUserRx1(@Path("id") id: Int): Flowable<ResponseLogin>
+    fun getUserRx1(@Path("id") id: Int): Flowable<Response<ResponseLogin>>
 
     //rx-java-type-2
     //https://jsonplaceholder.typicode.com/users/1
     @GET("/users/{id}")
-    fun getUserRx2(@Path("id") id: Int): Observable<ResponseLogin>
+    fun getUserRx2(@Path("id") id: Int): Observable<Response<ResponseLogin>>
 
     //coroutines
     @GET("/users/{id}")
