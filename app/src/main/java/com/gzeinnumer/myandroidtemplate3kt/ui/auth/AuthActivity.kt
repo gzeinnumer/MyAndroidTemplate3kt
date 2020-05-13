@@ -43,6 +43,7 @@ class AuthActivity : BaseActivity() {
             }
         })
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)

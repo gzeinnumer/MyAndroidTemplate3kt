@@ -1,10 +1,14 @@
 package com.gzeinnumer.myandroidtemplate3kt.base
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.util.SimpleMaterialDialog
@@ -12,6 +16,7 @@ import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import dagger.android.support.DaggerAppCompatActivity
 import dmax.dialog.SpotsDialog
 import es.dmoral.toasty.Toasty
+import java.util.ArrayList
 
 abstract class BaseActivity : DaggerAppCompatActivity(){
 
@@ -19,6 +24,12 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
 
     lateinit var alertLoading: AlertDialog
     lateinit var builderLoading: SpotsDialog.Builder
+
+    var permissions = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.ACCESS_NETWORK_STATE)
 
     override fun onStart() {
         super.onStart()
@@ -41,6 +52,45 @@ abstract class BaseActivity : DaggerAppCompatActivity(){
         super.onCreate(savedInstanceState, persistentState)
         val func = "onCreate+"
         myLogD(TAG,func)
+
+        if (checkPermissions()) {
+            allGrated()
+        }
+    }
+
+    private fun allGrated() {
+        Toast.makeText(this, "All Granted", Toast.LENGTH_SHORT).show()
+    }
+
+    var MULTIPLE_PERMISSIONS = 1
+    private fun checkPermissions(): Boolean {
+        var result: Int
+        val listPermissionsNeeded: MutableList<String> = ArrayList()
+        for (p in permissions) {
+            result = ContextCompat.checkSelfPermission(applicationContext, p)
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p)
+            }
+        }
+        if (listPermissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toTypedArray(), MULTIPLE_PERMISSIONS)
+            return false
+        }
+        return true
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        if (requestCode == MULTIPLE_PERMISSIONS) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                allGrated()
+            } else {
+                val perStr = StringBuilder()
+                for (per in permissions) {
+                    perStr.append("\n").append(per)
+                }
+            }
+        }
     }
 
     fun onSuccess(msg: String?) {
