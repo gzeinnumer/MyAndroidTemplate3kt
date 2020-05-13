@@ -2,9 +2,14 @@ package com.gzeinnumer.myandroidtemplate3kt.dagger
 
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.gzeinnumer.myandroidtemplate3kt.MyApp
+import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
 import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
 import com.gzeinnumer.myandroidtemplate3kt.util.FORMAT_yyyy_MM_DD_HH_mm_ss
@@ -71,4 +76,23 @@ class AppModule {
     @Provides
     @Singleton
     fun providesAppDatabase(app: Application): AppDatabase = AppDatabase.getInstance(app)
+
+    @Singleton
+    @Provides
+    fun providesDrawable(application: Application): Drawable {
+        return ContextCompat.getDrawable(application, R.drawable.kotlin)!!
+    }
+
+    @Singleton
+    @Provides
+    fun providesRequestOptions(): RequestOptions {
+        return RequestOptions.placeholderOf(R.drawable.mygzn_ic_broken)
+            .error(R.drawable.mygzn_ic_broken).circleCrop()
+    }
+
+    @Singleton
+    @Provides
+    fun providesRequestManager(application: Application, requestOptions: RequestOptions): RequestManager {
+        return Glide.with(application).setDefaultRequestOptions(requestOptions)
+    }
 }

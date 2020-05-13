@@ -1,10 +1,12 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.auth
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.RequestManager
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
@@ -19,6 +21,12 @@ class AuthActivity : BaseActivity() {
     private val TAG = "AuthActivity"
 
     lateinit var binding: ActivityAuthBinding
+
+    @Inject
+    lateinit var logo: Drawable
+
+    @Inject
+    lateinit var requestManager: RequestManager
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -45,9 +53,15 @@ class AuthActivity : BaseActivity() {
 
         viewModel = ViewModelProviders.of(this, providerFactory).get(AuthVM::class.java)
 
+        setLogo()
+
         initOnClick()
 
         subcribeObserversRx1()
+    }
+
+    private fun setLogo() {
+        requestManager.load(logo).into(binding.loginLogo)
     }
 
     private fun initOnClick() {
