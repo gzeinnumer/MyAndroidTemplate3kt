@@ -54,14 +54,23 @@ class PostLocalFragment : BaseFragment() {
         initSwipeRefresh()
         initRecyclerView()
 
-        subscribeObservers()
+//        subscribeObservers()
+//        subscribeObserversFlowable()
+//        subscribeObserversMaybe()
+        subscribeObserversSingle()
 
     }
 
     private fun initSwipeRefresh() {
         val func = "initSwipeRefresh+"
         myLogD(TAG, func)
-        binding.swipeToRefresh.setOnRefreshListener { subscribeObservers() }
+        binding.swipeToRefresh.setOnRefreshListener {
+
+//        subscribeObservers()
+//        subscribeObserversFlowable()
+//        subscribeObserversMaybe()
+        subscribeObserversSingle()
+        }
     }
 
     private fun initRecyclerView() {
@@ -92,6 +101,65 @@ class PostLocalFragment : BaseFragment() {
         })
     }
 
+    private fun subscribeObserversFlowable() {
+        val func = "subscribeObserversFlowable+"
+        myLogD(TAG, func)
+
+        viewModel.getListFLowable().observe(viewLifecycleOwner, Observer { listBaseResource ->
+            when (listBaseResource.status) {
+                BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowSucces(it).show() }
+                    listBaseResource.data?.let { postsRecyclerAdapter.insertData(it) }
+                }
+                BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowError(it).show() }
+                }
+                BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onSwipeToRefresh(true)
+            }
+        })
+    }
+
+    private fun subscribeObserversMaybe() {
+        val func = "subscribeObserversMaybe+"
+        myLogD(TAG, func)
+
+        viewModel.getListMayBe().observe(viewLifecycleOwner, Observer { listBaseResource ->
+            when (listBaseResource.status) {
+                BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowSucces(it).show() }
+                    listBaseResource.data?.let { postsRecyclerAdapter.insertData(it) }
+                }
+                BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowError(it).show() }
+                }
+                BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onSwipeToRefresh(true)
+            }
+        })
+    }
+
+    private fun subscribeObserversSingle() {
+        val func = "subscribeObserversSingle+"
+        myLogD(TAG, func)
+
+        viewModel.getListSingle().observe(viewLifecycleOwner, Observer { listBaseResource ->
+            when (listBaseResource.status) {
+                BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowSucces(it).show() }
+                    listBaseResource.data?.let { postsRecyclerAdapter.insertData(it) }
+                }
+                BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                    onSwipeToRefresh(false)
+                    listBaseResource.message?.let { onShowError(it).show() }
+                }
+                BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onSwipeToRefresh(true)
+            }
+        })
+    }
 
     private fun onSwipeToRefresh(status: Boolean) {
         binding.swipeToRefresh.isRefreshing = status

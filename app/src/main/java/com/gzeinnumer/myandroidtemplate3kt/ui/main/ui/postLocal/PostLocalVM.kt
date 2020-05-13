@@ -1,7 +1,6 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main.ui.postLocal
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseResource
 import com.gzeinnumer.myandroidtemplate3kt.data.model.ResponsePost
@@ -16,18 +15,27 @@ class PostLocalVM @Inject constructor(val repository: PostLocalRepositoryImpl) :
         val func = "getList+"
         myLogD(TAG, func)
 
-        val posts = MediatorLiveData<BaseResource<List<ResponsePost>>>()
+        return repository.getList()
+    }
 
-        posts.value = BaseResource.loading()
-        val data: List<ResponsePost> = repository.getList()
+    fun getListFLowable(): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "getListFLowable+"
+        myLogD(TAG, func)
 
-        if (data.isNotEmpty()) {
-            myLogD(TAG, func + "Jumlah data " + data.size)
-            posts.setValue(BaseResource.success("Success dapat data local", data))
-        } else {
-            myLogD(TAG, func + "Jumlah data " + data.size)
-            posts.setValue(BaseResource.error("Tidak ada data dalam local"))
-        }
-        return posts
+        return repository.getListFLowable()
+    }
+
+    fun getListMayBe(): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "getListMayBe+"
+        myLogD(TAG, func)
+
+        return repository.getListMaybe()
+    }
+
+    fun getListSingle(): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "getListSingle+"
+        myLogD(TAG, func)
+
+        return repository.getListSingle()
     }
 }
