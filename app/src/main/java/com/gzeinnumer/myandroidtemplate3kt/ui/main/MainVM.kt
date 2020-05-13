@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.gzeinnumer.myandroidtemplate3kt.data.SessionManager
+import com.gzeinnumer.myandroidtemplate3kt.data.room.AppDatabase
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
 import javax.inject.Inject
 
-class MainVM @Inject constructor(private val sessionManager: SessionManager): ViewModel(){
+class MainVM @Inject constructor(private val sessionManager: SessionManager, private val db: AppDatabase): ViewModel(){
 
     companion object {
         private const val TAG = "MainVM"
@@ -18,6 +19,7 @@ class MainVM @Inject constructor(private val sessionManager: SessionManager): Vi
     }
 
     fun logout() {
+        db.storeResponsePostDao().truncateData()
         sessionManager.destroy()
     }
 
