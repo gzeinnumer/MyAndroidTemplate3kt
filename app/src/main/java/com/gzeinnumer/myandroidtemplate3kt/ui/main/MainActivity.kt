@@ -1,9 +1,11 @@
 package com.gzeinnumer.myandroidtemplate3kt.ui.main
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -11,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.gzeinnumer.myandroidtemplate3kt.R
 import com.gzeinnumer.myandroidtemplate3kt.base.BaseActivity
@@ -18,6 +21,7 @@ import com.gzeinnumer.myandroidtemplate3kt.dagger.ViewModelProviderFactory
 import com.gzeinnumer.myandroidtemplate3kt.databinding.ActivityMainBinding
 import com.gzeinnumer.myandroidtemplate3kt.ui.auth.AuthActivity
 import com.gzeinnumer.myandroidtemplate3kt.util.myLogD
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
