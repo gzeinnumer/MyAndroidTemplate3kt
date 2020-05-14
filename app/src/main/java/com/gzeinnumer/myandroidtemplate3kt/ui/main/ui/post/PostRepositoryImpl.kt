@@ -14,6 +14,9 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +35,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override fun getPostFromUserCall(
-        userId: Int,
+        userId: Int?,
         isLoadNew: Boolean
     ): LiveData<BaseResource<List<ResponsePost>>> {
         val func = "getPostFromUserCall+"
@@ -43,28 +46,30 @@ class PostRepositoryImpl @Inject constructor(
 
         if ((!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) || isLoadNew) {
             myLogD(TAG, func + "Load from api")
-            mainApi.getPostFromUserCall(userId)
-                .enqueue(object : Callback<List<ResponsePost>> {
-                    override fun onResponse(
-                        call: Call<List<ResponsePost>>,
-                        response: Response<List<ResponsePost>>
-                    ) {
-                        if (response.code() == BaseHttpCode.HTTP_1_SUCCESS) {
-                            response.body()?.let {
-                                data.setValue(BaseResource.success("Success dapatkan data online", it))
+            userId?.let {
+                mainApi.getPostFromUserCall(it)
+                    .enqueue(object : Callback<List<ResponsePost>> {
+                        override fun onResponse(
+                            call: Call<List<ResponsePost>>,
+                            response: Response<List<ResponsePost>>
+                        ) {
+                            if (response.code() == BaseHttpCode.HTTP_1_SUCCESS) {
+                                response.body()?.let {
+                                    data.setValue(BaseResource.success("Success dapatkan data online", it))
+                                }
+                            } else {
+                                data.setValue(BaseResource.error("Gagal mendapatkan data : "+response.code()))
                             }
-                        } else {
-                            data.setValue(BaseResource.error("Gagal mendapatkan data : "+response.code()))
                         }
-                    }
 
-                    override fun onFailure(
-                        call: Call<List<ResponsePost>>,
-                        t: Throwable
-                    ) {
-                        data.value = BaseResource.error("Gagal mendapatkan data online" + t.message)
-                    }
-                })
+                        override fun onFailure(
+                            call: Call<List<ResponsePost>>,
+                            t: Throwable
+                        ) {
+                            data.value = BaseResource.error("Gagal mendapatkan data online" + t.message)
+                        }
+                    })
+            }
         } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
             myLogD(TAG, func + "Load from room")
             val d = db.storeResponsePostDao().getAll()
@@ -75,7 +80,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     @Suppress("SENSELESS_COMPARISON")
-    override fun getPotsFromUserRx1(userId: Int): Flowable<BaseResource<List<ResponsePost>>> {
+    override fun getPotsFromUserRx1(userId: Int?): Flowable<BaseResource<List<ResponsePost>>> {
         val func = "getPotsFromUserRx1+"
         myLogD(TAG, func)
 
@@ -102,7 +107,7 @@ class PostRepositoryImpl @Inject constructor(
 //            })
 //            .subscribeOn(Schedulers.io())
 
-        return mainApi.getPostFromUserRx1(userId)
+        return mainApi.getPostFromUserRx1(userId!!)
             .onErrorReturn {
                 myLogD(TAG, "apply: $it")
                 null
@@ -128,7 +133,7 @@ class PostRepositoryImpl @Inject constructor(
 
     @SuppressLint("CheckResult")
     override fun getPotsFromUserRx2(
-        userId: String?,
+        userId: Int?,
         isLoadNew: Boolean
     ): LiveData<BaseResource<List<ResponsePost>>> {
         val func = "getPotsFromUserRx2+"
@@ -140,20 +145,22 @@ class PostRepositoryImpl @Inject constructor(
         if ((!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) || isLoadNew) {
             myLogD(TAG, func + "Load from api")
 
-            mainApi.getPostFromUserRx2(userId!!.toInt())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if(response.code() == BaseHttpCode.HTTP_1_SUCCESS){
-                        response.body()?.let {
-                            data.value = BaseResource.success("Success Dapat data online", it)
+            userId?.let {
+                mainApi.getPostFromUserRx2(it)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        if(response.code() == BaseHttpCode.HTTP_1_SUCCESS){
+                            response.body()?.let {
+                                data.value = BaseResource.success("Success Dapat data online", it)
+                            }
+                        } else {
+                            data.value = BaseResource.error("Gagal dapatkan data :  " + response.code())
                         }
-                    } else {
-                        data.value = BaseResource.error("Gagal dapatkan data :  " + response.code())
-                    }
-                },{
-                    data.value = BaseResource.error("Gagal Dapatkan data "+ it.message)
-                })
+                    },{
+                        data.value = BaseResource.error("Gagal Dapatkan data "+ it.message)
+                    })
+            }
         } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
             myLogD(TAG, func + "Load from room")
             val d = db.storeResponsePostDao().getAll()
@@ -162,4 +169,42 @@ class PostRepositoryImpl @Inject constructor(
         return data
     }
 
+    override fun getPotsFromUserCoroutines(
+        userId: Int?,
+        isLoadNew: Boolean
+    ): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "getPotsFromUserCoroutines+"
+        myLogD(TAG, func)
+
+        val data = MutableLiveData<BaseResource<List<ResponsePost>>>()
+        data.value = BaseResource.loading()
+
+        if ((!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) || isLoadNew) {
+            myLogD(TAG, func + "Load from api")
+
+            GlobalScope.launch(Dispatchers.Main) {
+                try{
+                    val call = userId?.let { mainApi.getPostFromUserCoroutines(it) }
+                    val response = call?.await()
+                    when(response?.code()){
+                        BaseHttpCode.HTTP_1_SUCCESS->{
+                            response.body()?.let {
+                                data.value = BaseResource.success("Success Dapat data online", it)
+                            }
+                        }
+                        else ->{
+                            data.value = BaseResource.error("Gagal dapatkan data :  " + response?.code())
+                        }
+                    }
+                } catch (e: Exception){
+                    data.value = BaseResource.error("Gagal Dapatkan data "+ e.message)
+                }
+            }
+        } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
+            myLogD(TAG, func + "Load from room")
+            val d = db.storeResponsePostDao().getAll()
+            data.value = BaseResource.success("Success dapat data local", d)
+        }
+        return data
+    }
 }

@@ -74,8 +74,9 @@ class AuthActivity : BaseActivity() {
                 return@setOnClickListener
             }
 //            subcribeObserversCall(binding.userIdInput.text.toString().toInt())
-            viewModel.authWithIdRx1(binding.userIdInput.text.toString().toInt())
+//            viewModel.authWithIdRx1(binding.userIdInput.text.toString().toInt())
 //            subcribeObserversRx2(binding.userIdInput.text.toString().toInt())
+            subscribeObserversCoroutines(binding.userIdInput.text.toString().toInt())
         }
     }
 
@@ -128,6 +129,28 @@ class AuthActivity : BaseActivity() {
         myLogD(TAG,func)
 
         viewModel.authWithIdRx2(userId).observe(this, Observer {
+            if (it != null) {
+                when (it.status) {
+                    BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {
+                        onHideLoading()
+                        onSuccess(it.message)
+                        onSuccessLogin()
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_2_ERROR -> {
+                        onHideLoading()
+                        it.message?.let { it1 -> onShowError(it1).show() }
+                    }
+                    BaseResource.BaseResourceStatus.STATUS_6_LOADING -> onShowLoading()
+                }
+            }
+        })
+    }
+
+    private fun subscribeObserversCoroutines(userId: Int) {
+        val func = "subscribeObserversCoroutines+"
+        myLogD(TAG,func)
+
+        viewModel.authWithIdCoroutines(userId).observe(this, Observer {
             if (it != null) {
                 when (it.status) {
                     BaseResource.BaseResourceStatus.STATUS_1_SUCCESS -> {

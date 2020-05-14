@@ -10,8 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 
 interface PostRepository {
-    fun getPostFromUserCall(userId: Int, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
-    fun getPotsFromUserRx1(userId: Int): Flowable<BaseResource<List<ResponsePost>>>
-    fun getPotsFromUserRx2(userId: String?, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
-
+    fun getPostFromUserCall(userId: Int?, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
+    fun getPotsFromUserRx1(userId: Int?): Flowable<BaseResource<List<ResponsePost>>>
+    fun getPotsFromUserRx2(userId: Int?, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
+    fun getPotsFromUserCoroutines(userId: Int?, isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>>
 }

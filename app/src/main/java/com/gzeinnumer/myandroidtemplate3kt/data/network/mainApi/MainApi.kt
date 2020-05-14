@@ -37,6 +37,6 @@ interface MainApi {
     @GET("/posts")
     fun getPostFromUserCoroutines(
         @Query("userId") id: Int
-    ): Deferred<List<ResponsePost>>
+    ): Deferred<Response<List<ResponsePost>>>
 
 }

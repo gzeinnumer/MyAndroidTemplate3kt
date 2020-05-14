@@ -21,19 +21,6 @@ class AuthVM @Inject constructor(
         myLogD(TAG, "AuthVM: viewmodel sudah bekerja")
     }
 
-    private val stateSession = MediatorLiveData<Boolean>()
-
-    fun cekSession(): LiveData<Boolean> {
-        val func = "cekSession+" + sessionManager.userId
-        myLogD(TAG, func)
-        if (sessionManager.userId.equals("")) {
-            stateSession.setValue(false)
-        } else {
-            stateSession.setValue(true)
-        }
-        return stateSession
-    }
-
     fun authWithIdCall(userId: Int): LiveData<BaseResource<ResponseLogin>>  {
         val func = "authWithIdCall+"
         myLogD(TAG, func)
@@ -71,4 +58,23 @@ class AuthVM @Inject constructor(
         return repository.authWithIdRx2(userId)
     }
 
+    fun authWithIdCoroutines(userId: Int): LiveData<BaseResource<ResponseLogin>> {
+        val func = "authWithIdCoroutines+"
+        myLogD(TAG, func)
+
+        return repository.authWithIdCoroutines(userId)
+    }
+
+    private val stateSession = MediatorLiveData<Boolean>()
+
+    fun cekSession(): LiveData<Boolean> {
+        val func = "cekSession+" + sessionManager.userId
+        myLogD(TAG, func)
+        if (sessionManager.userId.equals("")) {
+            stateSession.setValue(false)
+        } else {
+            stateSession.setValue(true)
+        }
+        return stateSession
+    }
 }

@@ -21,12 +21,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/nav_header_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/nav_header_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/data/network/mainApi/MainApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/data/network/mainApi/MainApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthVM.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/auth/AuthVM.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostVM.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gzeinnumer/myandroidtemplate3kt/ui/main/ui/post/PostVM.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +72,7 @@
     <property name="adb_path" value="C:\Users\GZeinNumer\AppData\Local\Android\Sdk\platform-tools\adb.exe" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../MultiPermitionkt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editing.templates" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -328,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589409352380</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary=".">
+      <created>1589411449836</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1589411449836</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

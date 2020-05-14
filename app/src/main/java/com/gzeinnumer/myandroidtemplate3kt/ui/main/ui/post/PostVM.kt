@@ -25,9 +25,6 @@ class PostVM @Inject constructor(
         myLogD(TAG, "PostVM: ready")
     }
 
-    var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? = MediatorLiveData<BaseResource<List<ResponsePost>>>()
-
-
     fun observePostsCall(isLoadNew: Boolean) : LiveData<BaseResource<List<ResponsePost>>> {
         val func = "observePostsCall+"
         myLogD(TAG, func)
@@ -35,6 +32,7 @@ class PostVM @Inject constructor(
         return repository.getPostFromUserCall(sessionManager.userId?.toInt()!!, isLoadNew)
     }
 
+    var posts: MediatorLiveData<BaseResource<List<ResponsePost>>>? = MediatorLiveData<BaseResource<List<ResponsePost>>>()
     fun observePostsRx1(isLoadNew: Boolean): MediatorLiveData<BaseResource<List<ResponsePost>>>? {
         val func = "observePostsRx1+"
         myLogD(TAG, func)
@@ -42,7 +40,7 @@ class PostVM @Inject constructor(
         posts?.value = BaseResource.loading()
         if ((!isLoadNew && db.storeResponsePostDao().getRowCount() == 0) ||isLoadNew) {
             myLogD(TAG, func + "Load from api")
-            loadDataPostFromServer()
+            loadDataPostFromServerRx1()
         } else if (!isLoadNew && db.storeResponsePostDao().getRowCount() > 0) {
             myLogD(TAG, func + "Load from room")
             val data: List<ResponsePost> = db.storeResponsePostDao().getAll()
@@ -51,14 +49,14 @@ class PostVM @Inject constructor(
         return posts
     }
 
-    private fun loadDataPostFromServer() {
-        val func = "loadDataPostFromServer+"
+    private fun loadDataPostFromServerRx1() {
+        val func = "loadDataPostFromServerRx1+"
         myLogD(TAG, func)
 
         if (networkAvailable.isNetworkAvailable()) {
             val source: LiveData<BaseResource<List<ResponsePost>>> =
                 LiveDataReactiveStreams.fromPublisher(
-                    repository.getPotsFromUserRx1(sessionManager.userId?.toInt()!!)
+                    repository.getPotsFromUserRx1(sessionManager.userId?.toInt())
                 )
             posts?.addSource(source) { listMainResource ->
                 posts?.value = listMainResource
@@ -73,6 +71,13 @@ class PostVM @Inject constructor(
         val func = "observePostsRx2+"
         myLogD(TAG, func)
 
-        return repository.getPotsFromUserRx2(sessionManager.userId, isLoadNew)
+        return repository.getPotsFromUserRx2(sessionManager.userId?.toInt(), isLoadNew)
+    }
+
+    fun observePostsCoroutines(isLoadNew: Boolean): LiveData<BaseResource<List<ResponsePost>>> {
+        val func = "observePostsRx2+"
+        myLogD(TAG, func)
+
+        return repository.getPotsFromUserCoroutines(sessionManager.userId?.toInt(), isLoadNew)
     }
 }

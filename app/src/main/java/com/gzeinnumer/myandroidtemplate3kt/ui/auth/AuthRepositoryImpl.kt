@@ -14,6 +14,9 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -111,6 +114,36 @@ class AuthRepositoryImpl @Inject constructor(
             }, {
                 data.value = BaseResource.error("Gagal Login : "+it.message)
             })
+
+        return data
+    }
+
+    @SuppressLint("CheckResult")
+    override fun authWithIdCoroutines(userId: Int): MutableLiveData<BaseResource<ResponseLogin>> {
+        val func = "authWithIdCoroutines+$userId"
+        myLogD(TAG, func)
+
+        val data = MutableLiveData<BaseResource<ResponseLogin>>()
+        data.value = BaseResource.loading()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            try{
+                val call = userId.let { authApi.getUserCoroutines(it) }
+                val response = call.await()
+                when(response.code()){
+                    BaseHttpCode.HTTP_1_SUCCESS->{
+                        response.body()?.let {
+                            data.value = BaseResource.success("Success Dapat data online", it)
+                        }
+                    }
+                    else ->{
+                        data.value = BaseResource.error("Gagal dapatkan data :  " + response.code())
+                    }
+                }
+            } catch (e: Exception){
+                data.value = BaseResource.error("Gagal Dapatkan data "+ e.message)
+            }
+        }
 
         return data
     }

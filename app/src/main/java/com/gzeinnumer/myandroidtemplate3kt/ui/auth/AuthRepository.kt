@@ -11,4 +11,5 @@ interface AuthRepository {
     fun authWithIdCall(userId: Int): LiveData<BaseResource<ResponseLogin>>
     fun authWithIdRx1(userId: Int): Flowable<BaseResource<ResponseLogin>>
     fun authWithIdRx2(userId: Int): MutableLiveData<BaseResource<ResponseLogin>>
+    fun authWithIdCoroutines(userId: Int): MutableLiveData<BaseResource<ResponseLogin>>
 }
